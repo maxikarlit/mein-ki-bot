@@ -26,7 +26,7 @@ bot.on("message:text", async (ctx) => {
                 { role: "system", content: "Antworte kurz auf Deutsch." },
                 { role: "user", content: ctx.message.text }
             ],
-           model: "llama-3.2-11b-vision-preview"
+           model: "llama-3.2-11b-vision"
         });
 
         const antwort = chatCompletion.choices[0].message.content;
@@ -53,7 +53,7 @@ bot.on("message:photo", async (ctx) => {
 
     // 3. Die Anfrage an Groq senden
     const response = await groq.chat.completions.create({
-      model: "llama-3.2-11b-vision-preview",
+      model: "llama-3.2-11b-vision",
       messages: [
         {
           role: "user",
