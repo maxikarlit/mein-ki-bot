@@ -26,7 +26,7 @@ bot.on("message:text", async (ctx) => {
                 { role: "system", content: "Antworte kurz auf Deutsch." },
                 { role: "user", content: ctx.message.text }
             ],
-           model: "llama-3.2-11b-vision-preview"
+           model: "llama-3.3-70b-versatile"
         });
 
         const antwort = chatCompletion.choices[0].message.content;
@@ -39,37 +39,6 @@ bot.on("message:text", async (ctx) => {
         await ctx.reply("Fehler: " + error.message);
     }
 });
-// Dieser Teil reagiert, wenn du ein Foto schickst
-bot.on("message:photo", async (ctx) => {
-  try {
-    // 1. Die ID des größten Fotos holen (Telegram schickt immer mehrere Größen)
-    const photo = ctx.message.photo[ctx.message.photo.length - 1];
-    const file = await ctx.getFile();
-    
-    // 2. Den Link zum Bild erstellen
-    const imageUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${file.file_path}`;
 
-    await ctx.reply("Ich schaue mir das Bild an...");
-
-    // 3. Die Anfrage an Groq senden
-    const response = await groq.chat.completions.create({
-      model: "llama-3.2-11b-vision-preview",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "Was siehst du auf diesem Bild? Beantworte auch eventuelle Fragen dazu." },
-            { type: "image_url", image_url: { url: imageUrl } }
-          ],
-        },
-      ],
-    });
-
-    await ctx.reply(response.choices[0].message.content);
-  } catch (error) {
-    console.error("Fehler beim Bild:", error);
-    await ctx.reply("Sorry, ich konnte das Bild nicht auswerten.");
-  }
-});
 bot.start();
 console.log("Bot läuft... Schreib ihm jetzt bei Telegram!");
